@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Subscription Hub</string>
+    <string name="tab_dashboard">總覽</string>
+    <string name="tab_subscriptions">訂閱</string>
+    <string name="tab_calendar">月曆</string>
+    <string name="tab_report">報表</string>
+    <string name="placeholder_coming_soon">此頁面開發中。所有金額與日期皆為預估，請以服務商帳單為準。</string>
+</resources>
