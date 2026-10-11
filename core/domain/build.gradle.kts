@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 // Pure Kotlin/JVM module: dates, money, forecast, reminder planning and CSV encoding (SA NFR-06).
 // No Android dependency, so the core rules are testable on any JVM.
 plugins {
+    `java-library`
     alias(libs.plugins.kotlin.jvm)
 }
 
@@ -21,6 +22,9 @@ kotlin {
 }
 
 dependencies {
+    // Flow appears in repository interfaces, so consumers need it on their compile classpath.
+    api(libs.kotlinx.coroutines.core)
+
     testImplementation(libs.kotlin.test)
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
