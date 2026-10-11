@@ -10,8 +10,8 @@
 | Wave | 內容 | 狀態 |
 |---|---|---|
 | W0 | 專案骨架、Compose / M3、Hilt、自適應導航、CI | ✅ 完成（App 編譯由 CI 驗證） |
-| W1 | Domain：金額、續訂日期引擎、預估、提醒規劃、CSV、表單驗證、搜尋排序 | ✅ 完成，73 項單元測試 |
-| W2 | Room / DataStore / Repository | ⏳ 下一步 |
+| W1 | Domain：金額、續訂日期引擎、預估、提醒規劃、CSV、表單驗證、搜尋排序 | ✅ 完成，74 項單元測試 |
+| W2 | Room v1 schema、DataStore 設定、Repository、Hilt 資料模組 | ✅ 完成，11 項 Robolectric / JVM 測試 |
 | W3–W7 | 訂閱 CRUD、Dashboard / 月曆 / 報表、提醒、匯出、QA | ⏳ |
 
 ## 模組結構
@@ -25,7 +25,14 @@ core/domain/   純 Kotlin（JVM）模組，無 Android 依賴（SA NFR-06）
   export/      CsvEncoder、SubscriptionCsvExporter（UTF-8 BOM、RFC 4180、公式注入防護）
   validation/  SubscriptionDraftValidator（FR-001/002/004）
   query/       SubscriptionQuery、DuplicateNames（FR-007/008）
+  repository/  Repository 介面（Subscription / ReminderLog / Settings）
+  time/        TimeSource（每次呼叫都重新讀取時區）
 app/           Android App（Compose UI、Hilt、Navigation）
+  data/local/        Room entities、DAO、SubscriptionHubDatabase、mappers
+  data/preferences/  DataStore 設定
+  data/repository/   Repository 實作
+  di/                Hilt 模組
+app/schemas/   Room schema 歷史（已提交；CI 會檢查與 entity 是否一致）
 ```
 
 與 SA §8.3 的差異：domain 層獨立為 Gradle 模組 `:core:domain`（SA 原本放在 `app/.../domain/`），讓日期與金額規則可以在任何 JVM 上測試，並由 `-Xjdk-release=1.8` 擋下 minSdk 26 不支援的 JDK API。
@@ -40,7 +47,7 @@ app/           Android App（Compose UI、Hilt、Navigation）
 ./gradlew :app:lintDebug :app:testDebugUnitTest
 ```
 
-CI：`.github/workflows/android-ci.yml`，每次 push 都會跑 domain 測試、lint 與 Debug build，並上傳 APK artifact。
+CI：`.github/workflows/android-ci.yml`，每次 push 都會跑 domain 測試、App 單元測試（Robolectric）、lint、Debug build，並檢查測試數量（任一模組 0 項即失敗）與 Room schema drift，最後上傳 APK artifact。
 
 ## 已採用的預設決策（可由 PO 推翻）
 
@@ -62,7 +69,13 @@ CI：`.github/workflows/android-ci.yml`，每次 push 都會跑 domain 測試、
 - `gradle-wrapper.properties` 尚未設定 `distributionSha256Sum`（開發環境無法取得官方 checksum），建議在本機補上。
 - 提醒採 WorkManager，不保證準時（SA §5.3）；目前尚未實作（W5）。
 
+## 資料庫變更規則
+
+1. 修改 entity 時，同時把 `SubscriptionHubDatabase.version` 加 1，並撰寫 `Migration`。
+2. 提交 Room 新產生的 `app/schemas/.../<version>.json`；CI 的 schema drift 檢查會擋下未提交的變更。
+3. 新增 `MigrationTestHelper` 測試；正式版不得使用 `fallbackToDestructiveMigration`。
+
 ## 下一步
 
-1. W2：Room v1 schema（含 `billing_day`、ReminderLog upsert）、DataStore、Repository。
-2. W3：訂閱列表、表單（含月底確認）、詳情頁。
+1. W3：訂閱列表、表單（含月底確認）、詳情頁，以及 ViewModel / UseCase。
+2. W4：Dashboard、月曆、報表。

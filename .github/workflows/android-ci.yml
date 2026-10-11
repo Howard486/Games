@@ -39,10 +39,11 @@ jobs:
       - name: Room schema drift
         run: |
           if [ -n "$(git status --porcelain -- app/schemas)" ]; then
-            echo "Room schema differs from the committed copy:"
+            echo "::error::Room schema differs from the committed copy. Bump the DB version, add a migration and commit app/schemas."
             git status --porcelain -- app/schemas
-            find app/schemas -name '*.json' -exec sh -c 'echo "=== $1"; cat "$1"' _ {} \;
-            exit 0  # TODO(W2): switch to exit 1 once v1 schema is committed
+            git diff -- app/schemas
+            find app/schemas -name '*.json' -newer gradlew -exec sh -c 'echo "=== $1"; cat "$1"' _ {} \;
+            exit 1
           fi
 
       - name: Upload reports
