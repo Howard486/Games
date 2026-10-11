@@ -33,6 +33,18 @@ jobs:
       - name: App unit tests, lint, debug build
         run: ./gradlew --no-daemon :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
 
+      - name: Test summary
+        run: python3 .github/scripts/test_summary.py
+
+      - name: Room schema drift
+        run: |
+          if [ -n "$(git status --porcelain -- app/schemas)" ]; then
+            echo "Room schema differs from the committed copy:"
+            git status --porcelain -- app/schemas
+            find app/schemas -name '*.json' -exec sh -c 'echo "=== $1"; cat "$1"' _ {} \;
+            exit 0  # TODO(W2): switch to exit 1 once v1 schema is committed
+          fi
+
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
