@@ -10,6 +10,14 @@ plugins {
     alias(libs.plugins.room)
 }
 
+// CI passes its run number so every published build installs over the previous one.
+val ciBuildNumber: Int? = providers.environmentVariable("CI_BUILD_NUMBER").orNull?.toIntOrNull()
+
+// Shared debug key, injected by CI from GitHub Secrets (never committed: the repo is public).
+// Without it, AGP falls back to the machine's ~/.android/debug.keystore.
+val sharedDebugKeystore: String? = providers.environmentVariable("DEBUG_KEYSTORE_PATH").orNull?.takeIf { it.isNotBlank() }
+val sharedDebugKeystorePassword: String? = providers.environmentVariable("DEBUG_KEYSTORE_PASSWORD").orNull
+
 android {
     namespace = "com.howardaistudio.subscriptionhub"
     compileSdk = 36
@@ -20,13 +28,25 @@ android {
         // D-02: minSdk 26 gives native java.time and notification channels.
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = ciBuildNumber ?: 1
+        versionName = "0.1.0" + (ciBuildNumber?.let { "-ci.$it" } ?: "")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        if (sharedDebugKeystore != null) {
+            create("sharedDebug") {
+                storeFile = file(requireNotNull(sharedDebugKeystore))
+                storePassword = sharedDebugKeystorePassword
+                keyAlias = "debug"
+                keyPassword = sharedDebugKeystorePassword
+            }
+        }
     }
 
     buildTypes {
         debug {
+            if (sharedDebugKeystore != null) signingConfig = signingConfigs.getByName("sharedDebug")
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
         }

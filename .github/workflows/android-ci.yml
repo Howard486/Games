@@ -2,6 +2,7 @@ name: Android CI
 
 on:
   push:
+    branches: ["**"] # tags (incl. the debug pre-release tags) do not trigger builds
   pull_request:
   workflow_dispatch:
 
@@ -16,6 +17,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      signing: ${{ steps.signing.outputs.mode }}
+      fingerprint: ${{ steps.signing.outputs.fingerprint }}
+    env:
+      CI_BUILD_NUMBER: ${{ github.run_number }}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +32,28 @@ jobs:
 
       # Also validates gradle-wrapper.jar against official checksums.
       - uses: gradle/actions/setup-gradle@v4
+
+      # Stable debug signature so each build installs over the previous one. The key lives in
+      # GitHub Secrets (public repo); forks and PRs without the secret use an ephemeral key.
+      - name: Shared debug signing key
+        id: signing
+        env:
+          KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.DEBUG_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ] && [ -n "$KEYSTORE_PASSWORD" ]; then
+            path="$RUNNER_TEMP/debug.keystore"
+            echo "$KEYSTORE_B64" | base64 -d > "$path"
+            echo "DEBUG_KEYSTORE_PATH=$path" >> "$GITHUB_ENV"
+            echo "DEBUG_KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> "$GITHUB_ENV"
+            fp=$(keytool -list -v -keystore "$path" -storepass "$KEYSTORE_PASSWORD" -alias debug | awk '/SHA256:/ {print $2; exit}')
+            echo "mode=shared" >> "$GITHUB_OUTPUT"
+            echo "fingerprint=$fp" >> "$GITHUB_OUTPUT"
+            echo "Signing debug build with the shared key ($fp)"
+          else
+            echo "mode=ephemeral" >> "$GITHUB_OUTPUT"
+            echo "::warning::DEBUG_KEYSTORE_BASE64 / DEBUG_KEYSTORE_PASSWORD secrets not set; using an ephemeral debug key. Installs will not update over previous builds."
+          fi
 
       - name: Domain unit tests (pure Kotlin)
         run: ./gradlew --no-daemon :core:domain:test
@@ -69,3 +97,56 @@ jobs:
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+  # Rolling pre-release per branch: a stable, login-free download link for phones.
+  publish-debug:
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-debug
+          path: apk
+
+      - name: Publish pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SIGNING: ${{ needs.build.outputs.signing }}
+          FINGERPRINT: ${{ needs.build.outputs.fingerprint }}
+        run: |
+          set -euo pipefail
+          slug=$(printf '%s' "$BRANCH" | tr -c 'A-Za-z0-9._-' '-')
+          tag="debug-$slug"
+          apk=$(find apk -name '*.apk' | head -n 1)
+          cp "$apk" subscription-hub-debug.apk
+
+          notes=$(cat <<NOTES
+          Debug build ci.$RUN_NUMBER of \`$BRANCH\` at ${GITHUB_SHA::7}. For internal testing only.
+
+          - Package: \`com.howardaistudio.subscriptionhub.debug\` (installs alongside a future release build)
+          - Signing: $SIGNING ${FINGERPRINT:+(SHA-256 $FINGERPRINT)}
+          - All amounts and dates in the app are estimates.
+          - CI run: $RUN_URL
+          NOTES
+          )
+
+          # Replace the previous build so this tag always points at the latest commit.
+          gh release delete "$tag" --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes || true
+          gh release create "$tag" subscription-hub-debug.apk \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Debug ci.$RUN_NUMBER ($BRANCH)" \
+            --notes "$notes"
+
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$tag/subscription-hub-debug.apk"
+          echo "APK: $url"
+          echo "### Debug APK: [$tag]($url)" >> "$GITHUB_STEP_SUMMARY"

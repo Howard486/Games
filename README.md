@@ -49,6 +49,39 @@ app/schemas/   Room schema 歷史（已提交；CI 會檢查與 entity 是否一
 
 CI：`.github/workflows/android-ci.yml`，每次 push 都會跑 domain 測試、App 單元測試（Robolectric）、lint、Debug build，並檢查測試數量（任一模組 0 項即失敗）與 Room schema drift，最後上傳 APK artifact。
 
+## 下載測試版 APK
+
+每次 push 到分支後，CI 會發佈一個滾動更新的 **pre-release**（每個分支一個，固定網址，手機瀏覽器可直接下載，不需登入）：
+
+```text
+https://github.com/Howard486/Games/releases/download/debug-<branch>/subscription-hub-debug.apk
+```
+
+- 套件名稱為 `com.howardaistudio.subscriptionhub.debug`，可與日後的正式版並存。
+- `versionCode` = CI run number，`versionName` = `0.1.0-ci.<run>-debug`，新版可直接覆蓋安裝。
+- 僅供內部測試；repo 為 public，任何人都能下載此測試版。
+
+### 共用 debug 簽章（GitHub Secrets）
+
+為了讓每次建置都能覆蓋安裝，CI 使用同一把 debug key 簽章。key **只存在 GitHub Secrets**，不提交進 repo（repo 為 public）：
+
+| Secret | 內容 |
+|---|---|
+| `DEBUG_KEYSTORE_BASE64` | PKCS12 keystore 的 base64（alias 固定為 `debug`） |
+| `DEBUG_KEYSTORE_PASSWORD` | keystore 與 key 共用的密碼 |
+
+設定位置：GitHub repo → Settings → Secrets and variables → Actions → New repository secret。未設定時 CI 改用臨時 key（會出現 warning），APK 仍可安裝，但無法覆蓋前一版。
+
+自行重新產生 key：
+
+```bash
+keytool -genkeypair -keystore debug.keystore -storetype PKCS12 -alias debug \
+  -keyalg RSA -keysize 2048 -validity 10950 -dname "CN=Subscription Hub Debug, O=HowardAIStudio, C=TW"
+base64 -w0 debug.keystore   # 貼到 DEBUG_KEYSTORE_BASE64
+```
+
+更換 key 後，手機上的舊版必須先移除一次。正式版（release）簽章與 Play App Signing 屬於 W7，會使用另一把 key。
+
 ## 已採用的預設決策（可由 PO 推翻）
 
 | ID | 決策 | 實作位置 |
