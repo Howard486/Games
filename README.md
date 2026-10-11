@@ -58,7 +58,7 @@ CI：`.github/workflows/android-ci.yml`，每次 push 都會跑 domain 測試、
 
 ## 已知限制
 
-- 依賴版本已在 kickoff 時固定（`gradle/libs.versions.toml`）。開發 container 連不到 Google Maven，因此 AndroidX / AGP 版本由 CI 首次建置驗證。
+- 依賴版本已在 kickoff 時固定（`gradle/libs.versions.toml`），並已通過 CI（AGP 8.13.0 / Kotlin 2.2.21 / Compose BOM 2025.08.00）。雲端開發 container 連不到 Google Maven（`dl.google.com`），所以 App 模組只能在 CI 或本機建置。
 - `gradle-wrapper.properties` 尚未設定 `distributionSha256Sum`（開發環境無法取得官方 checksum），建議在本機補上。
 - 提醒採 WorkManager，不保證準時（SA §5.3）；目前尚未實作（W5）。
 
