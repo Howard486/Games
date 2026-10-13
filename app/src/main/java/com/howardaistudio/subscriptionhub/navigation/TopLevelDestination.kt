@@ -22,6 +22,8 @@ import kotlin.reflect.KClass
 
 @Serializable data class SubscriptionDetailRoute(val id: String)
 
+@Serializable data object SettingsRoute
+
 /** Bottom tabs on phones, navigation rail on large screens (SA §4.3 item 3). */
 enum class TopLevelDestination(
     val route: Any,

@@ -83,6 +83,10 @@ class AndroidReminderNotifier @Inject constructor(
         }
     }
 
+    override fun cancelAll() {
+        NotificationManagerCompat.from(context).cancelAll()
+    }
+
     companion object {
         const val CHANNEL_ID = "renewal_reminders"
         private const val TAG = "renewal"

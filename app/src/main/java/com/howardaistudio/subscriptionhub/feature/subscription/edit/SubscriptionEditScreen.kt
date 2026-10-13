@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.howardaistudio.subscriptionhub.R
 import com.howardaistudio.subscriptionhub.core.ui.CheckboxRow
 import com.howardaistudio.subscriptionhub.core.ui.ChipRow
+import com.howardaistudio.subscriptionhub.core.ui.CurrencyPicker
 import com.howardaistudio.subscriptionhub.core.ui.LoadingContent
 import com.howardaistudio.subscriptionhub.core.ui.LocalDatePickerDialog
 import com.howardaistudio.subscriptionhub.core.ui.MessageContent
@@ -264,26 +265,4 @@ private fun FieldSupport(error: DraftError?, length: Int, max: Int) {
 @Composable
 private fun ErrorText(error: DraftError) {
     Text(stringResource(error.messageRes()), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
-}
-
-@Composable
-private fun CurrencyPicker(selected: String, onSelect: (String) -> Unit, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
-    Box(modifier) {
-        OutlinedButton(onClick = { expanded = true }) {
-            Text(selected)
-            Icon(painterResource(R.drawable.ic_arrow_drop_down), contentDescription = stringResource(R.string.field_currency))
-        }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            CurrencyCatalog.all.forEach { currency ->
-                DropdownMenuItem(
-                    text = { Text(currency.code) },
-                    onClick = {
-                        onSelect(currency.code)
-                        expanded = false
-                    },
-                )
-            }
-        }
-    }
 }

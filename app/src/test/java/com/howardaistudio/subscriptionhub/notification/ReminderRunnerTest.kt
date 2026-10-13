@@ -41,6 +41,7 @@ private class FakeNotifier(var allowed: Boolean = true, var accept: Boolean = tr
         if (accept) shown += reminder
         return accept
     }
+    override fun cancelAll() = shown.clear()
 }
 
 private class MutableTime(var instant: Instant) : TimeSource {

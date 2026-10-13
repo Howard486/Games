@@ -18,6 +18,9 @@ interface ReminderNotifier {
 
     /** Returns false when the system refused to post. */
     fun show(reminder: DueReminder, today: LocalDate): Boolean
+
+    /** Removes every posted reminder, e.g. after all data is cleared (dev plan G7). */
+    fun cancelAll()
 }
 
 /**

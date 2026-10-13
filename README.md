@@ -14,7 +14,9 @@
 | W2 | Room v1 schema、DataStore 設定、Repository、Hilt 資料模組 | ✅ 完成，11 項 Robolectric / JVM 測試 |
 | W3 | 訂閱列表（搜尋／排序／篩選／同名提示）、新增與編輯表單、詳情頁（暫停／取消／封存／恢復／刪除） | ✅ |
 | W4 | 總覽（本月預估、未來 30 天、月均等值）、扣款月曆、報表（月均／年均、分類占比、狀態） | ✅ |
-| W5–W7 | 提醒、CSV 匯出與設定、QA 與上架 | ⏳ |
+| W5 | WorkManager 續訂提醒、通知權限、去重、點通知開啟詳情、時區變更重算 | ✅ |
+| W6 | 設定（幣別、主題、提醒天數／時間）、CSV 匯出（SAF）、清除全部資料（二次確認）、首次使用引導、隱私說明 | ✅ |
+| W7 | QA、無障礙、效能、Release 簽章與上架文件 | ⏳ |
 
 ## 模組結構
 
@@ -35,7 +37,9 @@ app/           Android App（Compose UI、Hilt、Navigation）
   data/preferences/  DataStore 設定
   data/repository/   Repository 實作
   di/                Hilt 模組
-  feature/           subscription（列表／表單／詳情）、dashboard、calendar、report
+  feature/           subscription（列表／表單／詳情）、dashboard、calendar、report、settings、onboarding
+  notification/      ReminderRunner、WorkManager 排程、通知與權限提示
+  data/export/       CSV 匯出（Storage Access Framework）
 app/schemas/   Room schema 歷史（已提交；CI 會檢查與 entity 是否一致）
 ```
 
@@ -104,7 +108,7 @@ base64 -w0 debug.keystore   # 貼到 DEBUG_KEYSTORE_BASE64
 
 - 依賴版本已在 kickoff 時固定（`gradle/libs.versions.toml`），並已通過 CI（AGP 8.13.0 / Kotlin 2.2.21 / Compose BOM 2025.08.00）。雲端開發 container 連不到 Google Maven（`dl.google.com`），所以 App 模組只能在 CI 或本機建置。
 - `gradle-wrapper.properties` 尚未設定 `distributionSha256Sum`（開發環境無法取得官方 checksum），建議在本機補上。
-- 提醒採 WorkManager，不保證準時（SA §5.3）；目前尚未實作（W5）。
+- 提醒採 WorkManager 每小時巡檢，僅在偏好時間之後送出；受 Doze／省電影響，不保證準時（SA §5.3）。
 
 ## 資料庫變更規則
 
@@ -114,5 +118,5 @@ base64 -w0 debug.keystore   # 貼到 DEBUG_KEYSTORE_BASE64
 
 ## 下一步
 
-1. W5：WorkManager 提醒、通知權限、去重與深連結。
-2. W6：CSV 匯出、設定頁、清除資料、首次使用引導。
+1. W7：Compose UI 測試、TalkBack／字級、1,000 筆效能、API 26 實機測試。
+2. 上架準備：Release 簽章、AAB、隱私政策、Data safety。

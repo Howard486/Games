@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,16 +33,30 @@ import com.howardaistudio.subscriptionhub.domain.forecast.DashboardSummary
 import com.howardaistudio.subscriptionhub.notification.NotificationPermissionBanner
 
 @Composable
-fun DashboardScreen(onAdd: () -> Unit, onOpen: (String) -> Unit, viewModel: DashboardViewModel = hiltViewModel()) {
+fun DashboardScreen(
+    onAdd: () -> Unit,
+    onOpen: (String) -> Unit,
+    onSettings: () -> Unit,
+    viewModel: DashboardViewModel = hiltViewModel(),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    DashboardContent(state, onAdd, onOpen)
+    DashboardContent(state, onAdd, onOpen, onSettings)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardContent(state: DashboardUiState, onAdd: () -> Unit, onOpen: (String) -> Unit) {
+fun DashboardContent(state: DashboardUiState, onAdd: () -> Unit, onOpen: (String) -> Unit, onSettings: () -> Unit) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_dashboard)) }) },
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.tab_dashboard)) },
+                actions = {
+                    IconButton(onClick = onSettings) {
+                        Icon(painterResource(R.drawable.ic_settings), contentDescription = stringResource(R.string.action_settings))
+                    }
+                },
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onAdd) {
                 Icon(painterResource(R.drawable.ic_add), contentDescription = stringResource(R.string.action_add_subscription))

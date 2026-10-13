@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.howardaistudio.subscriptionhub.feature.calendar.CalendarScreen
 import com.howardaistudio.subscriptionhub.feature.dashboard.DashboardScreen
 import com.howardaistudio.subscriptionhub.feature.report.ReportScreen
+import com.howardaistudio.subscriptionhub.feature.settings.SettingsScreen
 import com.howardaistudio.subscriptionhub.feature.subscription.detail.SubscriptionDetailScreen
 import com.howardaistudio.subscriptionhub.feature.subscription.edit.SubscriptionEditScreen
 import com.howardaistudio.subscriptionhub.feature.subscription.list.SubscriptionListScreen
@@ -77,6 +78,7 @@ fun SubscriptionHubNavHost(deepLinkSubscriptionId: String? = null, onDeepLinkHan
                 DashboardScreen(
                     onAdd = { navController.navigate(SubscriptionCreateRoute) },
                     onOpen = { id -> navController.navigate(SubscriptionDetailRoute(id)) },
+                    onSettings = { navController.navigate(SettingsRoute) },
                 )
             }
             composable<SubscriptionsRoute> {
@@ -90,6 +92,7 @@ fun SubscriptionHubNavHost(deepLinkSubscriptionId: String? = null, onDeepLinkHan
 
             composable<SubscriptionCreateRoute> { SubscriptionEditScreen(onDone = { navController.popBackStack() }) }
             composable<SubscriptionEditRoute> { SubscriptionEditScreen(onDone = { navController.popBackStack() }) }
+            composable<SettingsRoute> { SettingsScreen(onBack = { navController.popBackStack() }) }
             composable<SubscriptionDetailRoute> {
                 SubscriptionDetailScreen(
                     onBack = { navController.popBackStack() },
