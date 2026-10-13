@@ -17,6 +17,10 @@
 | 11 | README、隱私政策、Data safety | 🟡 | `README.md`、`privacy-policy.md`、`play-data-safety.md` 草稿；待 PO 審閱與託管 |
 | 12 | Release AAB 與簽章管理流程 | 🟡 | CI 已建置**未簽章** release APK／AAB（驗證 R8）；簽章依約定延後 |
 
+## 靜態檢查（CI run #14）
+- Android Lint：0 error。剩餘 warning：依賴可更新（`GradleDependency`／`NewerVersionAvailable`，交由 Dependabot）、`AndroidGradlePluginVersion`、`OldTargetApi`（上架前依當期 Play 要求調整 targetSdk）、`DataExtractionRules`（目前以 `allowBackup=false` 停用雲端備份，見 G6）。
+- Gradle wrapper 已固定 `distributionSha256Sum`；CI 另以 setup-gradle 驗證 wrapper jar。
+
 ## 延後項目（功能開發完畢後處理）
 1. **Release 簽章**：產生 upload key，存入 GitHub Secrets；啟用 Play App Signing；CI 產出已簽章 AAB。
 2. **共用 debug 簽章**：設定 `DEBUG_KEYSTORE_BASE64`／`DEBUG_KEYSTORE_PASSWORD`（見 README）。

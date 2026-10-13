@@ -44,11 +44,9 @@
     <string name="action_add_subscription">新增訂閱</string>
     <string name="search_hint">搜尋名稱</string>
     <string name="action_clear_search">清除搜尋</string>
-    <string name="sort_label">排序</string>
     <string name="sort_next_date">下次日期</string>
     <string name="sort_amount">金額</string>
     <string name="sort_name">名稱</string>
-    <string name="filter_status_hint">未選狀態時顯示封存以外的全部</string>
     <string name="empty_title">還沒有任何訂閱</string>
     <string name="empty_body">開始新增第一筆訂閱。資料只存在這台裝置，不需要登入。</string>
     <string name="empty_action">新增第一筆訂閱</string>
