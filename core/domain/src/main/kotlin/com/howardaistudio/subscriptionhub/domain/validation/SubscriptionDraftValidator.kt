@@ -21,6 +21,9 @@ data class SubscriptionDraft(
     /** User confirmed "last day of every month"; only honoured for month-end candidates. */
     val monthEnd: Boolean = false,
     val note: String = "",
+    val reminderEnabled: Boolean = true,
+    /** New subscriptions only: start as TRIAL, with [nextBillingDate] being the first paid date. */
+    val trial: Boolean = false,
 )
 
 enum class DraftField { NAME, AMOUNT, CURRENCY, CYCLE, NEXT_BILLING_DATE, NOTE }

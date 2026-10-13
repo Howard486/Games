@@ -77,6 +77,19 @@ data class BillingSchedule(
         return result
     }
 
+    /** The next [count] billing dates on or after [from]. */
+    fun upcoming(from: LocalDate, count: Int): List<LocalDate> {
+        val first = firstIndexOnOrAfter(from)
+        return (0 until count).map { occurrence(first + it) }
+    }
+
+    /**
+     * Whether the form should pre-tick "last day of every month" when showing [date] as the next
+     * billing date, i.e. the schedule bills later in the month than [date] allows.
+     */
+    fun impliesMonthEnd(date: LocalDate): Boolean =
+        cycle != BillingCycle.WEEKLY && isMonthEndCandidate(date) && billingDay > date.dayOfMonth
+
     /** Whether [date] is one of this schedule's billing dates. */
     fun isBillingDate(date: LocalDate): Boolean = !date.isBefore(anchorDate) && firstOnOrAfter(date) == date
 

@@ -14,6 +14,14 @@ import kotlin.reflect.KClass
 
 @Serializable data object ReportRoute
 
+/** Create form. Shares the edit screen; its ViewModel sees no `id` argument. */
+@Serializable data object SubscriptionCreateRoute
+
+/** Property names must match `SubscriptionEditViewModel.ARG_ID` / `SubscriptionDetailViewModel.ARG_ID`. */
+@Serializable data class SubscriptionEditRoute(val id: String)
+
+@Serializable data class SubscriptionDetailRoute(val id: String)
+
 /** Bottom tabs on phones, navigation rail on large screens (SA §4.3 item 3). */
 enum class TopLevelDestination(
     val route: Any,

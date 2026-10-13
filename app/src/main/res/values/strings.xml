@@ -6,4 +6,95 @@
     <string name="tab_calendar">月曆</string>
     <string name="tab_report">報表</string>
     <string name="placeholder_coming_soon">此頁面開發中。所有金額與日期皆為預估，請以服務商帳單為準。</string>
+    <!-- Enum labels -->
+    <string name="category_ai">AI 工具</string>
+    <string name="category_video">影音串流</string>
+    <string name="category_cloud_storage">雲端／儲存</string>
+    <string name="category_software">軟體／工具</string>
+    <string name="category_education">教育</string>
+    <string name="category_other">其他</string>
+    <string name="status_active">使用中</string>
+    <string name="status_trial">試用中</string>
+    <string name="status_paused">已暫停</string>
+    <string name="status_cancelled">已取消續訂</string>
+    <string name="status_archived">已封存</string>
+    <string name="cycle_monthly">每月</string>
+    <string name="cycle_yearly">每年</string>
+    <string name="cycle_weekly">每週</string>
+
+    <!-- Validation -->
+    <string name="error_required">必填</string>
+    <string name="error_too_long">超過字數上限</string>
+    <string name="error_invalid_format">格式不正確</string>
+    <string name="error_too_many_decimals">小數位數超過此幣別上限</string>
+    <string name="error_not_positive">金額需大於 0</string>
+    <string name="error_too_large">金額過大</string>
+    <string name="error_unsupported_currency">不支援的幣別</string>
+
+    <!-- Common -->
+    <string name="action_back">返回</string>
+    <string name="action_save">儲存</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_confirm">確定</string>
+    <string name="action_edit">編輯</string>
+    <string name="action_delete">刪除</string>
+    <string name="estimate_disclaimer">所有日期與金額皆為預估，請以服務商帳單為準。</string>
+    <string name="char_count">%1$d／%2$d</string>
+
+    <!-- Subscription list -->
+    <string name="action_add_subscription">新增訂閱</string>
+    <string name="search_hint">搜尋名稱</string>
+    <string name="action_clear_search">清除搜尋</string>
+    <string name="sort_label">排序</string>
+    <string name="sort_next_date">下次日期</string>
+    <string name="sort_amount">金額</string>
+    <string name="sort_name">名稱</string>
+    <string name="filter_status_hint">未選狀態時顯示封存以外的全部</string>
+    <string name="empty_title">還沒有任何訂閱</string>
+    <string name="empty_body">開始新增第一筆訂閱。資料只存在這台裝置，不需要登入。</string>
+    <string name="empty_action">新增第一筆訂閱</string>
+    <string name="no_results">沒有符合條件的訂閱</string>
+    <string name="item_next_estimate">預計 %1$s 扣款</string>
+    <string name="item_first_payment">試用中，預計 %1$s 首次扣款</string>
+    <string name="item_no_projection">不預估扣款</string>
+    <string name="duplicate_badge">可能重複</string>
+
+    <!-- Subscription form -->
+    <string name="title_new_subscription">新增訂閱</string>
+    <string name="title_edit_subscription">編輯訂閱</string>
+    <string name="field_name">名稱</string>
+    <string name="field_category">類別</string>
+    <string name="field_amount">金額</string>
+    <string name="field_currency">幣別</string>
+    <string name="field_cycle">計費週期</string>
+    <string name="field_next_date">下次預估扣款日</string>
+    <string name="field_first_payment_date">首次付費日</string>
+    <string name="select_date">請選擇日期</string>
+    <string name="month_end_option">每月最後一天扣款</string>
+    <string name="trial_option">目前為免費試用</string>
+    <string name="trial_hint">試用期間不計入支出，從首次付費日開始預估。</string>
+    <string name="reminder_option">續訂前提醒</string>
+    <string name="field_note">備註（選填）</string>
+    <string name="duplicate_warning">已有同名訂閱：%1$s。仍可儲存。</string>
+    <string name="subscription_not_found">找不到這筆訂閱，可能已被刪除。</string>
+
+    <!-- Subscription detail -->
+    <string name="detail_status">狀態</string>
+    <string name="detail_category">類別</string>
+    <string name="detail_next">下次預估扣款</string>
+    <string name="detail_no_projection">此狀態不預估扣款</string>
+    <string name="detail_trial_until">試用至 %1$s 前，之後開始預估扣款</string>
+    <string name="detail_upcoming">接下來的預估扣款日</string>
+    <string name="detail_monthly_equivalent">月均等值（估算）</string>
+    <string name="detail_reminder">續訂提醒</string>
+    <string name="reminder_on">開啟</string>
+    <string name="reminder_off">關閉</string>
+    <string name="detail_note">備註</string>
+    <string name="action_pause">暫停</string>
+    <string name="action_cancel_renewal">取消續訂</string>
+    <string name="action_archive">封存</string>
+    <string name="action_resume">恢復啟用</string>
+    <string name="resume_hint">恢復前請確認下次扣款日</string>
+    <string name="delete_title">刪除這筆訂閱？</string>
+    <string name="delete_body">刪除後無法復原，相關提醒也會一併停止。</string>
 </resources>
