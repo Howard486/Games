@@ -6,7 +6,10 @@ import com.howardaistudio.subscriptionhub.domain.forecast.CalendarMonth
 import com.howardaistudio.subscriptionhub.domain.forecast.Summaries
 import com.howardaistudio.subscriptionhub.domain.repository.SubscriptionRepository
 import com.howardaistudio.subscriptionhub.domain.time.TimeSource
+import com.howardaistudio.subscriptionhub.di.ComputeDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +31,7 @@ data class CalendarUiState(
 class CalendarViewModel @Inject constructor(
     repository: SubscriptionRepository,
     timeSource: TimeSource,
+    @ComputeDispatcher computeDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     private val today = timeSource.today()
     private val month = MutableStateFlow(YearMonth.from(today))
@@ -36,7 +40,7 @@ class CalendarViewModel @Inject constructor(
     val uiState: StateFlow<CalendarUiState> =
         combine(repository.observeAll(), month, selected) { subscriptions, currentMonth, selectedDate ->
             CalendarUiState(today, currentMonth, selectedDate, Summaries.calendar(subscriptions, currentMonth))
-        }.stateIn(
+        }.flowOn(computeDispatcher).stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
             CalendarUiState(today, YearMonth.from(today), today, data = null),

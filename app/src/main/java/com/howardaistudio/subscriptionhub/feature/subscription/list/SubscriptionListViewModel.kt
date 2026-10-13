@@ -11,7 +11,10 @@ import com.howardaistudio.subscriptionhub.domain.query.SubscriptionFilter
 import com.howardaistudio.subscriptionhub.domain.query.SubscriptionQuery
 import com.howardaistudio.subscriptionhub.domain.repository.SubscriptionRepository
 import com.howardaistudio.subscriptionhub.domain.time.TimeSource
+import com.howardaistudio.subscriptionhub.di.ComputeDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +48,7 @@ sealed interface SubscriptionListUiState {
 class SubscriptionListViewModel @Inject constructor(
     repository: SubscriptionRepository,
     private val timeSource: TimeSource,
+    @ComputeDispatcher computeDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val filter = MutableStateFlow(SubscriptionFilter())
@@ -57,7 +61,8 @@ class SubscriptionListViewModel @Inject constructor(
             val rows = SubscriptionQuery.apply(all, currentFilter, today) { a, b -> collator.compare(a, b) }
                 .map { SubscriptionRow(it, it.nextBillingDate(today), it.isInTrial(today), it.id in duplicates) }
             SubscriptionListUiState.Ready(currentFilter, rows, all.size)
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SubscriptionListUiState.Loading)
+        }.flowOn(computeDispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SubscriptionListUiState.Loading)
 
     fun onQueryChange(query: String) = filter.update { it.copy(query = query) }
 

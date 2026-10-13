@@ -39,7 +39,7 @@ class OverviewViewModelsTest {
     // AT-14 / AT-23
     @Test
     fun `dashboard keeps currencies apart`() = runTest(main.dispatcher) {
-        val vm = DashboardViewModel(repo, FixedTime)
+        val vm = DashboardViewModel(repo, FixedTime, main.dispatcher)
         backgroundScope.launch(main.dispatcher) { vm.uiState.collect {} }
         val summary = (vm.uiState.value as DashboardUiState.Ready).summary
         assertEquals(listOf(Money(39000, "TWD", 2), Money(2000, "USD", 2)), summary.monthTotals)
@@ -49,7 +49,7 @@ class OverviewViewModelsTest {
     // AT-24
     @Test
     fun `calendar navigates months and keeps today selected only in its month`() = runTest(main.dispatcher) {
-        val vm = CalendarViewModel(repo, FixedTime)
+        val vm = CalendarViewModel(repo, FixedTime, main.dispatcher)
         backgroundScope.launch(main.dispatcher) { vm.uiState.collect {} }
 
         val october = vm.uiState.value
@@ -71,7 +71,7 @@ class OverviewViewModelsTest {
     // AT-25
     @Test
     fun `report changes month and splits categories per currency`() = runTest(main.dispatcher) {
-        val vm = ReportViewModel(repo, FixedTime)
+        val vm = ReportViewModel(repo, FixedTime, main.dispatcher)
         backgroundScope.launch(main.dispatcher) { vm.uiState.collect {} }
 
         val ready = vm.uiState.value as ReportUiState.Ready

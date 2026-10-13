@@ -116,7 +116,7 @@ class SubscriptionViewModelsTest {
                 testSubscription("4", name = "Old", status = SubscriptionStatus.ARCHIVED),
             ),
         )
-        val vm = SubscriptionListViewModel(repo, FixedTime)
+        val vm = SubscriptionListViewModel(repo, FixedTime, main.dispatcher)
         backgroundScope.launch(main.dispatcher) { vm.uiState.collect {} }
 
         val ready = vm.uiState.value as SubscriptionListUiState.Ready
@@ -138,7 +138,7 @@ class SubscriptionViewModelsTest {
 
     @Test
     fun `empty repository reports zero total`() = runTest(main.dispatcher) {
-        val vm = SubscriptionListViewModel(InMemorySubscriptionRepository(), FixedTime)
+        val vm = SubscriptionListViewModel(InMemorySubscriptionRepository(), FixedTime, main.dispatcher)
         backgroundScope.launch(main.dispatcher) { vm.uiState.collect {} }
         assertEquals(0, (vm.uiState.value as SubscriptionListUiState.Ready).totalCount)
     }

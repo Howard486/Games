@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -136,7 +135,7 @@ private fun MonthGrid(state: CalendarUiState, counts: Map<LocalDate, Int>, onSel
             }
         }
         weeks.forEach { week ->
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            Row(Modifier.fillMaxWidth()) {
                 week.forEach { date ->
                     if (date == null) {
                         Spacer(Modifier.weight(1f))
@@ -156,34 +155,46 @@ private fun MonthGrid(state: CalendarUiState, counts: Map<LocalDate, Int>, onSel
     }
 }
 
+/**
+ * Whole cell (row width / 7 x 48dp) is the touch target, so it stays near the 48dp minimum even
+ * on narrow phones; the highlight circle is drawn inside it (SA §4.3 item 6, NFR-10).
+ */
 @Composable
 private fun DayCell(date: LocalDate, count: Int, isToday: Boolean, isSelected: Boolean, onClick: () -> Unit, modifier: Modifier) {
     val colors = MaterialTheme.colorScheme
     val description = stringResource(R.string.calendar_day_description, UiFormat.date(date), count)
     Box(
         modifier = modifier
-            .aspectRatio(1f)
-            .clip(CircleShape)
-            .background(if (isSelected) colors.primaryContainer else colors.surface)
-            .then(if (isToday) Modifier.border(1.dp, colors.primary, CircleShape) else Modifier)
+            .height(CELL_HEIGHT)
             .clickable(role = Role.Button, onClick = onClick)
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                date.dayOfMonth.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isSelected) colors.onPrimaryContainer else colors.onSurface,
-            )
-            // Marker only; the count is in the content description and the day list below.
-            Box(
-                Modifier
-                    .padding(top = 2.dp)
-                    .size(6.dp)
-                    .clip(CircleShape)
-                    .background(if (count > 0) colors.primary else colors.surface.copy(alpha = 0f)),
-            )
+        Box(
+            modifier = Modifier
+                .size(CIRCLE_SIZE)
+                .clip(CircleShape)
+                .background(if (isSelected) colors.primaryContainer else colors.surface)
+                .then(if (isToday) Modifier.border(1.dp, colors.primary, CircleShape) else Modifier),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    date.dayOfMonth.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (isSelected) colors.onPrimaryContainer else colors.onSurface,
+                )
+                // Marker only; the count is in the content description and the day list below.
+                Box(
+                    Modifier
+                        .size(5.dp)
+                        .clip(CircleShape)
+                        .background(if (count > 0) colors.primary else colors.surface.copy(alpha = 0f)),
+                )
+            }
         }
     }
 }
+
+private val CELL_HEIGHT = 48.dp
+private val CIRCLE_SIZE = 40.dp

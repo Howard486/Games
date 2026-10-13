@@ -16,7 +16,7 @@
 | W4 | 總覽（本月預估、未來 30 天、月均等值）、扣款月曆、報表（月均／年均、分類占比、狀態） | ✅ |
 | W5 | WorkManager 續訂提醒、通知權限、去重、點通知開啟詳情、時區變更重算 | ✅ |
 | W6 | 設定（幣別、主題、提醒天數／時間）、CSV 匯出（SAF）、清除全部資料（二次確認）、首次使用引導、隱私說明 | ✅ |
-| W7 | QA、無障礙、效能、Release 簽章與上架文件 | ⏳ |
+| W7 | Compose UI 測試、觸控目標、1,000 筆效能、API 26 實機（emulator）測試、未簽章 release 建置、上架文件 | ✅（簽章依約定延後） |
 
 ## 模組結構
 
@@ -118,5 +118,5 @@ base64 -w0 debug.keystore   # 貼到 DEBUG_KEYSTORE_BASE64
 
 ## 下一步
 
-1. W7：Compose UI 測試、TalkBack／字級、1,000 筆效能、API 26 實機測試。
-2. 上架準備：Release 簽章、AAB、隱私政策、Data safety。
+1. 實機驗收：`docs/release/release-checklist.md` 的手動腳本。
+2. 上架準備：Release 簽章、Play Console、隱私政策託管（見檢核表「延後項目」）。
