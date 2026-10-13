@@ -127,11 +127,12 @@ class ScreensTest {
         val summary = Summaries.dashboard(listOf(usd, twd), today)
         show(fontScale = 2f) { DashboardContent(DashboardUiState.Ready(summary), onAdd = {}, onOpen = {}, onSettings = {}) }
 
+        // Each amount appears in several cards (month total, monthly equivalent, upcoming list).
         val list = compose.onNode(hasScrollAction())
         list.performScrollToNode(hasText("TWD 390"))
-        compose.onNodeWithText("TWD 390").assertExists()
+        assertTrue(compose.onAllNodesWithText("TWD 390").fetchSemanticsNodes().isNotEmpty())
         list.performScrollToNode(hasText("USD 20.00"))
-        compose.onNodeWithText("USD 20.00").assertExists()
+        assertTrue(compose.onAllNodesWithText("USD 20.00").fetchSemanticsNodes().isNotEmpty())
         compose.onAllNodesWithText("410", substring = true).assertCountEquals(0)
     }
 
