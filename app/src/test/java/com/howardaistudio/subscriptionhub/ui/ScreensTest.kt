@@ -47,9 +47,12 @@ import org.robolectric.annotation.Config
 import java.time.LocalDate
 import java.time.YearMonth
 
-/** Screen-level checks of the stateless composables (strings resolve to the zh-TW defaults). */
+/**
+ * Screen-level checks of the stateless composables (strings resolve to the zh-TW defaults).
+ * Runs on a typical phone window (411 x 891 dp) so lazy lists compose what a user would see.
+ */
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [35], application = Application::class)
+@Config(sdk = [35], application = Application::class, qualifiers = "w411dp-h891dp-xxhdpi")
 class ScreensTest {
     @get:Rule
     val compose = createComposeRule()

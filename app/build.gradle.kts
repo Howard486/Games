@@ -86,6 +86,9 @@ room {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+        // Constructor-property annotations such as @ApplicationContext or @StringRes apply to both
+        // the parameter and the field (Kotlin 2.2 KT-73255 behaviour, chosen explicitly).
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
 }
 
