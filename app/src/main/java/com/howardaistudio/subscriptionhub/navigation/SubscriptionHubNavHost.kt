@@ -18,7 +18,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.howardaistudio.subscriptionhub.core.ui.PlaceholderScreen
+import com.howardaistudio.subscriptionhub.feature.calendar.CalendarScreen
+import com.howardaistudio.subscriptionhub.feature.dashboard.DashboardScreen
+import com.howardaistudio.subscriptionhub.feature.report.ReportScreen
 import com.howardaistudio.subscriptionhub.feature.subscription.detail.SubscriptionDetailScreen
 import com.howardaistudio.subscriptionhub.feature.subscription.edit.SubscriptionEditScreen
 import com.howardaistudio.subscriptionhub.feature.subscription.list.SubscriptionListScreen
@@ -58,15 +60,20 @@ fun SubscriptionHubNavHost() {
         },
     ) {
         NavHost(navController = navController, startDestination = DashboardRoute) {
-            composable<DashboardRoute> { PlaceholderScreen(stringResource(TopLevelDestination.DASHBOARD.labelRes)) }
+            composable<DashboardRoute> {
+                DashboardScreen(
+                    onAdd = { navController.navigate(SubscriptionCreateRoute) },
+                    onOpen = { id -> navController.navigate(SubscriptionDetailRoute(id)) },
+                )
+            }
             composable<SubscriptionsRoute> {
                 SubscriptionListScreen(
                     onAdd = { navController.navigate(SubscriptionCreateRoute) },
                     onOpen = { id -> navController.navigate(SubscriptionDetailRoute(id)) },
                 )
             }
-            composable<CalendarRoute> { PlaceholderScreen(stringResource(TopLevelDestination.CALENDAR.labelRes)) }
-            composable<ReportRoute> { PlaceholderScreen(stringResource(TopLevelDestination.REPORT.labelRes)) }
+            composable<CalendarRoute> { CalendarScreen(onOpen = { id -> navController.navigate(SubscriptionDetailRoute(id)) }) }
+            composable<ReportRoute> { ReportScreen() }
 
             composable<SubscriptionCreateRoute> { SubscriptionEditScreen(onDone = { navController.popBackStack() }) }
             composable<SubscriptionEditRoute> { SubscriptionEditScreen(onDone = { navController.popBackStack() }) }

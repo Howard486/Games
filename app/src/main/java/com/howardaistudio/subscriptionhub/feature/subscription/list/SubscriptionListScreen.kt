@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -28,13 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.howardaistudio.subscriptionhub.R
 import com.howardaistudio.subscriptionhub.core.ui.ChipRow
+import com.howardaistudio.subscriptionhub.core.ui.EmptyState
 import com.howardaistudio.subscriptionhub.core.ui.LoadingContent
 import com.howardaistudio.subscriptionhub.core.ui.MessageContent
 import com.howardaistudio.subscriptionhub.core.ui.UiFormat
@@ -87,7 +86,13 @@ fun SubscriptionListContent(
             SubscriptionListUiState.Loading -> LoadingContent(modifier)
             is SubscriptionListUiState.Ready ->
                 if (state.totalCount == 0) {
-                    EmptyState(onAdd, modifier)
+                    EmptyState(
+                        title = stringResource(R.string.empty_title),
+                        body = stringResource(R.string.empty_body),
+                        actionLabel = stringResource(R.string.empty_action),
+                        onAction = onAdd,
+                        modifier = modifier,
+                    )
                 } else {
                     Column(modifier.fillMaxSize()) {
                         Filters(state, onQueryChange, onSortChange, onToggleStatus, onToggleCategory)
@@ -210,19 +215,6 @@ private fun SubscriptionCard(row: SubscriptionRow, onClick: () -> Unit) {
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun EmptyState(onAdd: () -> Unit, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(stringResource(R.string.empty_title), style = MaterialTheme.typography.headlineSmall)
-        Text(stringResource(R.string.empty_body), style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
-        Button(onClick = onAdd) { Text(stringResource(R.string.empty_action)) }
     }
 }
 

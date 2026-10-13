@@ -12,7 +12,9 @@
 | W0 | 專案骨架、Compose / M3、Hilt、自適應導航、CI | ✅ 完成（App 編譯由 CI 驗證） |
 | W1 | Domain：金額、續訂日期引擎、預估、提醒規劃、CSV、表單驗證、搜尋排序 | ✅ 完成，74 項單元測試 |
 | W2 | Room v1 schema、DataStore 設定、Repository、Hilt 資料模組 | ✅ 完成，11 項 Robolectric / JVM 測試 |
-| W3–W7 | 訂閱 CRUD、Dashboard / 月曆 / 報表、提醒、匯出、QA | ⏳ |
+| W3 | 訂閱列表（搜尋／排序／篩選／同名提示）、新增與編輯表單、詳情頁（暫停／取消／封存／恢復／刪除） | ✅ |
+| W4 | 總覽（本月預估、未來 30 天、月均等值）、扣款月曆、報表（月均／年均、分類占比、狀態） | ✅ |
+| W5–W7 | 提醒、CSV 匯出與設定、QA 與上架 | ⏳ |
 
 ## 模組結構
 
@@ -24,6 +26,7 @@ core/domain/   純 Kotlin（JVM）模組，無 Android 依賴（SA NFR-06）
   reminder/    ReminderPlanner（D-7/3/1/0、去重鍵、漏跑合併）
   export/      CsvEncoder、SubscriptionCsvExporter（UTF-8 BOM、RFC 4180、公式注入防護）
   validation/  SubscriptionDraftValidator（FR-001/002/004）
+  usecase/     ManageSubscriptions（儲存、暫停／取消／封存、恢復、刪除）
   query/       SubscriptionQuery、DuplicateNames（FR-007/008）
   repository/  Repository 介面（Subscription / ReminderLog / Settings）
   time/        TimeSource（每次呼叫都重新讀取時區）
@@ -32,6 +35,7 @@ app/           Android App（Compose UI、Hilt、Navigation）
   data/preferences/  DataStore 設定
   data/repository/   Repository 實作
   di/                Hilt 模組
+  feature/           subscription（列表／表單／詳情）、dashboard、calendar、report
 app/schemas/   Room schema 歷史（已提交；CI 會檢查與 entity 是否一致）
 ```
 
@@ -110,5 +114,5 @@ base64 -w0 debug.keystore   # 貼到 DEBUG_KEYSTORE_BASE64
 
 ## 下一步
 
-1. W3：訂閱列表、表單（含月底確認）、詳情頁，以及 ViewModel / UseCase。
-2. W4：Dashboard、月曆、報表。
+1. W5：WorkManager 提醒、通知權限、去重與深連結。
+2. W6：CSV 匯出、設定頁、清除資料、首次使用引導。

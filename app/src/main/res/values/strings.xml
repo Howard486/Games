@@ -5,7 +5,6 @@
     <string name="tab_subscriptions">訂閱</string>
     <string name="tab_calendar">月曆</string>
     <string name="tab_report">報表</string>
-    <string name="placeholder_coming_soon">此頁面開發中。所有金額與日期皆為預估，請以服務商帳單為準。</string>
     <!-- Enum labels -->
     <string name="category_ai">AI 工具</string>
     <string name="category_video">影音串流</string>
@@ -97,4 +96,36 @@
     <string name="resume_hint">恢復前請確認下次扣款日</string>
     <string name="delete_title">刪除這筆訂閱？</string>
     <string name="delete_body">刪除後無法復原，相關提醒也會一併停止。</string>
+    <!-- Shared month navigation -->
+    <string name="month_title">%1$d 年 %2$d 月</string>
+    <string name="action_prev_month">上個月</string>
+    <string name="action_next_month">下個月</string>
+    <string name="days_until_today">今天</string>
+    <string name="days_until">還有 %1$d 天</string>
+    <string name="event_supporting">%1$s · %2$s</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_month_title">%1$s 預估支出</string>
+    <string name="dashboard_month_count">共 %1$d 筆預估扣款（各幣別分開計算）</string>
+    <string name="dashboard_no_charges_this_month">本月沒有預估扣款</string>
+    <string name="dashboard_upcoming_title">未來 %1$d 天內預計續訂</string>
+    <string name="dashboard_upcoming_empty">未來 %1$d 天內沒有預計續訂</string>
+    <string name="dashboard_monthly_equivalent">月均等值（估算）</string>
+    <string name="dashboard_active_count">追蹤中 %1$d 筆，共 %2$d 筆</string>
+
+    <!-- Calendar -->
+    <string name="calendar_month_total">本月預估合計</string>
+    <string name="calendar_day_title">%1$s 預估扣款</string>
+    <string name="calendar_no_events">這天沒有預估扣款</string>
+    <string name="calendar_day_description">%1$s，%2$d 筆預估扣款</string>
+
+    <!-- Report -->
+    <string name="report_month_total">本月預估支付</string>
+    <string name="report_monthly_equivalent">月均等值（估算，供比較）</string>
+    <string name="report_yearly_equivalent">年均等值（估算）</string>
+    <string name="report_category_share">分類占比（依幣別各自計算，以月均等值為準）</string>
+    <string name="report_status_counts">訂閱狀態</string>
+    <string name="report_empty">新增訂閱後，這裡會顯示預估支出報表。</string>
+    <string name="report_none">無</string>
+    <string name="report_share_value">%1$s · %2$s</string>
 </resources>
