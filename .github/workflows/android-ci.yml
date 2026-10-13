@@ -31,7 +31,7 @@ jobs:
           java-version: "17"
 
       # Also validates gradle-wrapper.jar against official checksums.
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       # Stable debug signature so each build installs over the previous one. The key lives in
       # GitHub Secrets (public repo); forks and PRs without the secret use an ephemeral key.
@@ -120,7 +120,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Enable KVM
         run: |
