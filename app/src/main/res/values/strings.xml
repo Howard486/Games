@@ -128,4 +128,15 @@
     <string name="report_empty">新增訂閱後，這裡會顯示預估支出報表。</string>
     <string name="report_none">無</string>
     <string name="report_share_value">%1$s · %2$s</string>
+    <!-- Reminders (W5) -->
+    <string name="notification_channel_name">續訂提醒</string>
+    <string name="notification_channel_description">訂閱續訂前的本機提醒。受系統省電影響，不保證準時送達。</string>
+    <string name="notification_title">訂閱即將續訂：%1$s</string>
+    <string name="notification_text_days">預計 %1$d 天後（%2$s）續訂，金額 %3$s。請以服務商帳單為準。</string>
+    <string name="notification_text_today">預計今天（%1$s）續訂，金額 %2$s。請以服務商帳單為準。</string>
+    <string name="notification_public_title">訂閱即將續訂</string>
+    <string name="notifications_off_title">系統通知未啟用</string>
+    <string name="notifications_off_body">續訂提醒不會跳出通知，請留意總覽中的「未來 30 天內預計續訂」。</string>
+    <string name="action_allow_notifications">允許通知</string>
+    <string name="action_open_notification_settings">開啟通知設定</string>
 </resources>

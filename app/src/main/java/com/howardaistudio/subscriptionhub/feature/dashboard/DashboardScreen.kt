@@ -29,6 +29,7 @@ import com.howardaistudio.subscriptionhub.core.ui.SectionCard
 import com.howardaistudio.subscriptionhub.core.ui.UiFormat
 import com.howardaistudio.subscriptionhub.core.ui.monthTitle
 import com.howardaistudio.subscriptionhub.domain.forecast.DashboardSummary
+import com.howardaistudio.subscriptionhub.notification.NotificationPermissionBanner
 
 @Composable
 fun DashboardScreen(onAdd: () -> Unit, onOpen: (String) -> Unit, viewModel: DashboardViewModel = hiltViewModel()) {
@@ -74,6 +75,7 @@ private fun DashboardBody(summary: DashboardSummary, onOpen: (String) -> Unit, m
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 96.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        item { NotificationPermissionBanner() }
         item {
             SectionCard(stringResource(R.string.dashboard_month_title, monthTitle(summary.month))) {
                 if (summary.monthTotals.isEmpty()) {

@@ -7,6 +7,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,10 +28,22 @@ import com.howardaistudio.subscriptionhub.feature.subscription.list.Subscription
 
 /** App shell (SA §8.3 `AppNavGraph`): adaptive top-level navigation plus the feature graph. */
 @Composable
-fun SubscriptionHubNavHost() {
+fun SubscriptionHubNavHost(deepLinkSubscriptionId: String? = null, onDeepLinkHandled: () -> Unit = {}) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
+
+    // Reminder notification: open the subscription on top of the list so Back lands somewhere
+    // useful; a deleted subscription shows the detail screen's not-found state (SA FR-021).
+    LaunchedEffect(deepLinkSubscriptionId) {
+        val id = deepLinkSubscriptionId ?: return@LaunchedEffect
+        navController.navigate(SubscriptionsRoute) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+        }
+        navController.navigate(SubscriptionDetailRoute(id))
+        onDeepLinkHandled()
+    }
 
     // Bottom bar / rail only on the four top-level tabs; forms and details use the full screen.
     val layoutType = if (currentDestination.isTopLevel()) {

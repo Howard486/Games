@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Android 13+ runtime permission for reminders (SA FR-020). No exact-alarm permission. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <!--
         allowBackup="false" (dev plan G6 / SA D-06): no Google Drive cloud backup, so data stays
         local-only as stated in the UI. On Android 12+ this still permits device-to-device transfer
@@ -17,11 +20,23 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- System clock broadcasts; not exported because only the system sends them. -->
+        <receiver
+            android:name=".notification.TimeChangeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

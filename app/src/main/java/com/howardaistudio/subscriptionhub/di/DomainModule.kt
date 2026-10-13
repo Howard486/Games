@@ -16,3 +16,4 @@ object DomainModule {
     fun provideManageSubscriptions(repository: SubscriptionRepository, timeSource: TimeSource): ManageSubscriptions =
         ManageSubscriptions(repository, timeSource)
 }
+
